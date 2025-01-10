@@ -6,16 +6,17 @@
 3. postgres,
 4. hono framework,
 5. Redis as cache.
+6. Linter: EsLint + airbnb
 
 ## Instruction:
-1. nvm install 23 && nvm use 23
-2. git clone https://github.com/er-zhi/hono_server.git
-3. cd hono_server
-4. docker-compose up -d
-5. npm ci
-6. cp .env.example .env
-7. npm run seed
-8. npm start
+1. use latest node.js v23 to use built-in  TS compiler, dotenv and sqlite `nvm install 23 && nvm use 23`,
+2. `git clone https://github.com/er-zhi/hono_server.git`,
+3. `cd hono_server`,
+4. `docker-compose up -d`,
+5. `npm ci`,
+6. `cp .env.example .env`,
+7. `npm run seed`,
+8. `npm start`.
 
 ## Task 1: Registration, Authentication, Password Change
 
