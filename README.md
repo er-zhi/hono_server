@@ -9,9 +9,9 @@
 
 ## Instruction:
 1. nvm install 23 && nvm use 23
-2. git clone https://github.com/er-zhi/hono_server/
+2. git clone https://github.com/er-zhi/hono_server.git
 3. cd hono_server
-4. docker-compose up -d  or docker run --name redis -p 6379:6379 -d redis
+4. docker-compose up -d
 5. npm ci
 6. cp .env.example .env
 7. npm run seed
