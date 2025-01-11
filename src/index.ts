@@ -1,13 +1,16 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
+import { logger } from 'hono/logger';
+
 import { authController } from './auth/authController.ts';
 import { productController } from './product/productController.ts';
 import { purchaseController } from './purchase/purchaseController.ts';
 import { userController } from './user/userController.ts';
-import { initializeCache, closeCache } from './cache/redisCache.ts';
+import { initializeCache, closeCache } from './middleware/redisCache.ts';
 import { log } from "./logger/nanoLogger.ts";
 
 const app = new Hono();
+app.use('*', logger());
 
 app.route('/auth', authController);
 app.route('/products', productController);

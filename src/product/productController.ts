@@ -1,11 +1,11 @@
 import { Hono } from 'hono';
 import { getLowestPricedItems } from './productService.ts';
-import { simpleCache } from '../cache/redisCache.ts';
+import { simpleCache } from '../middleware/redisCache.ts';
 
 export const productController = new Hono();
 
 // Apply cache middleware
-productController.use('/', simpleCache(10)); // TODO set 300
+productController.use('/', simpleCache(60)); // TODO set 300
 
 productController.get('/', async (ctx) => {
   const result = await getLowestPricedItems();

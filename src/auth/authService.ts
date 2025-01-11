@@ -18,13 +18,12 @@ const verifyPassword = (password: string, salt: string, hashedPassword: string):
 
 // Register User
 export const registerUser = async (username: string, email: string, password: string) => {
-  const salt = generateSalt();
+  const salt = String(process.env.HASH_SALT);
   const hashedPassword = hashPassword(password, salt);
-
   try {
     const result = await query(
-      'INSERT INTO users (username, email, password, salt) VALUES ($1, $2, $3, $4) RETURNING id',
-      [username, email, hashedPassword, salt]
+      'INSERT INTO users (username, email, password, balance) VALUES ($1, $2, $3, $4) RETURNING id',
+      [username, email, hashedPassword, 1000]
     );
     return { id: result.rows[0].id };
   } catch (err) {
@@ -34,10 +33,11 @@ export const registerUser = async (username: string, email: string, password: st
 
 // Login User
 export const loginUser = async (email: string, password: string) => {
-  const result = await query('SELECT id, password, salt FROM users WHERE email = $1', [email]);
+  const result = await query('SELECT id, password FROM users WHERE email = $1', [email]);
   if (!result.rows[0]) return { error: 'Invalid email or password' };
 
-  const { id, password: hashedPassword, salt } = result.rows[0];
+  const { id, password: hashedPassword } = result.rows[0];
+  const salt = String(process.env.HASH_SALT);
   const isPasswordValid = verifyPassword(password, salt, hashedPassword);
 
   if (!isPasswordValid) return { error: 'Invalid email or password' };
@@ -47,19 +47,21 @@ export const loginUser = async (email: string, password: string) => {
 
 // Change Password
 export const changePassword = async (userId: string, oldPassword: string, newPassword: string) => {
-  const result = await query('SELECT password, salt FROM users WHERE id = $1', [userId]);
+  const result = await query('SELECT password FROM users WHERE id = $1', [userId]);
   if (!result.rows[0]) return { error: 'User not found' };
 
-  const { password: hashedPassword, salt } = result.rows[0];
+  const salt = String(process.env.HASH_SALT);
+
+  const { password: hashedPassword } = result.rows[0];
   const isPasswordValid = verifyPassword(oldPassword, salt, hashedPassword);
 
   if (!isPasswordValid) return { error: 'Old password is incorrect' };
 
-  const newSalt = generateSalt();
-  const newHashedPassword = hashPassword(newPassword, newSalt);
-  await query('UPDATE users SET password = $1, salt = $2 WHERE id = $3', [
+  const newHashedPassword = hashPassword(newPassword, salt);
+
+  // Fixed query
+  await query('UPDATE users SET password = $1 WHERE id = $2', [
     newHashedPassword,
-    newSalt,
     userId,
   ]);
 

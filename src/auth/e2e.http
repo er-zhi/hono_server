@@ -1,0 +1,57 @@
+### Register User - Success
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "johndoe",
+  "email": "johndoe@example.com",
+  "password": "securepassword"
+}
+
+### Register User - Validation Error
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "",
+  "email": "invalid-email",
+  "password": "123"
+}
+
+### Login User - Success
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "johndoe@example.com",
+  "password": "securepassword"
+}
+
+### Login User - Invalid Credentials
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "johndoe@example.com",
+  "password": "wrongpassword"
+}
+
+### Change Password - Success
+POST http://localhost:3000/auth/change-password
+Content-Type: application/json
+userId: 1
+
+{
+  "oldPassword": "securepassword",
+  "newPassword": "newsecurepassword"
+}
+
+### Change Password - Invalid Old Password
+POST http://localhost:3000/auth/change-password
+Content-Type: application/json
+userId: 1
+
+{
+  "oldPassword": "wrongpassword",
+  "newPassword": "newsecurepassword"
+}
