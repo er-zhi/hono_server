@@ -5,21 +5,28 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "start": "node --env-file .env src/index.ts",
+    "base": "node --env-file .env",
+    "start": "npm run base src/index.ts",
     "dev": "node --watch --env-file .env src/index.ts",
+    "migrate": "npm run base src/scripts/migrate.ts",
+    "seed": "npm run base src/scripts/seed.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Erzhigit Imamov",
   "license": "GPL-3.0",
   "dependencies": {
     "@hono/node-server": "^1.13.7",
-    "hono": "^4.6.16"
+    "@redis/client": "^1.6.0",
+    "axios": "^1.7.9",
+    "hono": "^4.6.16",
+    "pg": "^8.13.1"
   },
   "devDependencies": {
     "@types/node": "^22.10.5",
+    "@types/pg": "^8.11.10",
     "@typescript-eslint/eslint-plugin": "^8.19.1",
     "@typescript-eslint/parser": "^8.19.1",
     "eslint": "^8.57.1",

@@ -4,6 +4,8 @@ import { authController } from './auth/authController.ts';
 import { productController } from './product/productController.ts';
 import { purchaseController } from './purchase/purchaseController.ts';
 import { userController } from './user/userController.ts';
+import { initializeCache, closeCache } from './cache/redisCache.ts';
+import { log } from "./logger/nanoLogger.ts";
 
 const app = new Hono();
 
@@ -15,9 +17,37 @@ app.route('/purchases', purchaseController);
 const port = process.env.PORT;
 if (port === undefined) throw new Error('Environment variable "PORT" is required but not defined.');
 
-process.stdout.write(`Server is running on port: ${port}\n`);
+const startServer = async () => {
+  let redisConnected = false;
 
-serve({
-  fetch: app.fetch,
-  port: +port,
-});
+  try {
+    // Initialize Redis connection
+    log.info('Initializing Redis connection...');
+    await initializeCache();
+    redisConnected = true;
+    log.info('Redis connected successfully.');
+  } catch (error) {
+    log.warn('Failed to connect to Redis. Server will continue without caching.');
+    log.error(`Redis Error: ${(error as Error).message}`);
+  }
+
+  log.info(`Server is running on port: ${port}`);
+
+  // Start the server
+  serve({
+    fetch: app.fetch,
+    port: +port,
+  });
+
+  // Handle server shutdown
+  process.on('SIGINT', async () => {
+    log.info('Shutting down server...');
+    if (redisConnected) {
+      await closeCache();
+      log.info('Redis connection closed.');
+    }
+    process.exit(0);
+  });
+};
+
+void startServer();

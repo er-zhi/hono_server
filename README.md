@@ -1,22 +1,33 @@
 # hono_server
 
-## Stack:
+### Stack:
 1. Node.js v23,
-2. TypeScript
-3. postgres,
-4. hono framework,
-5. Redis as cache.
-6. Linter: EsLint + airbnb
+2. Postgres,
+3. Hono framework,
+4. Redis as cache,
+5. Docker.
+
+### Key points: 
+1. TypeScript
+2. Linter: EsLint + airbnb,
+3. Minimum dependencies, no dotenv, no nodemon...,
+4. Lightweight framework,
+5. Lightweight docker images,
 
 ## Instruction:
-1. use latest node.js v23 to use built-in  TS compiler, dotenv and sqlite `nvm install 23 && nvm use 23`,
+1. use latest node.js v23 (not LTS!) to use built-in TS compiler, dotenv and sqlite `nvm install 23 && nvm use 23`,
 2. `git clone https://github.com/er-zhi/hono_server.git`,
 3. `cd hono_server`,
-4. `docker-compose up -d`,
+4. `docker compose up -d`,
 5. `npm ci`,
 6. `cp .env.example .env`,
 7. `npm run seed`,
 8. `npm start`.
+
+### Task 2:
+midleware simpleCache based or redis,
+to see cache status added heater 'X-Cache-Status', 'MISS' or 'HIT'
+
 
 ## Task 1: Registration, Authentication, Password Change
 
