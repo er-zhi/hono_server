@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { query } from '../db/database.ts';
 
 const fetchItemsFromSkinport = async (tradable: boolean) => {
   try {
@@ -28,13 +29,23 @@ export const getLowestPricedItems = async () => {
     fetchItemsFromSkinport(false),
   ]);
 
-  const getLowestPrices = (items: any[]) =>
-    items
-      .sort((a, b) => a.min_price - b.min_price)
-      .slice(0, 2);
+  const getLowestPrices = (items: any[]) => items
+    .sort((a, b) => a.min_price - b.min_price)
+    .slice(0, 2);
 
   return {
     tradable: getLowestPrices(tradableItems),
     nonTradable: getLowestPrices(nonTradableItems),
   };
+};
+
+// Get products from the database
+export const getProductsFromDb = async () => {
+  try {
+    const result = await query('SELECT id, name, price FROM products');
+    return result.rows;
+  } catch (error) {
+    console.error('Error fetching products from database:', error);
+    throw new Error('Failed to fetch products from the database.');
+  }
 };

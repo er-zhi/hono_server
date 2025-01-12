@@ -1,14 +1,25 @@
 import { Hono } from 'hono';
+import { purchaseProduct } from './purchaseService.ts';
+import { log } from '../logger/nanoLogger.ts';
 
 export const purchaseController = new Hono();
 
-// purchaseController.post('/purchase', (c) => {
-//   const { userId, productId } = c.req.json();
-//   // Logic to handle the purchase, deduct balance, update purchases
-//   return c.json({ message: 'Purchase successful', balance: 100 });
-// });
-//
-// purchaseController.get('/balance', (c) => {
-//   // Fetch and return user balance
-//   return c.json({ balance: 100 });
-// });
+purchaseController.post('/', async (ctx) => {
+  try {
+    const { userId, productId } = await ctx.req.json();
+
+    if (!userId || !productId) {
+      return ctx.json({ error: 'User ID and Product ID are required' }, 400);
+    }
+
+    const result = await purchaseProduct(userId, productId);
+    if (result.error) {
+      return ctx.json({ error: result.error }, 400);
+    }
+
+    return ctx.json(result, 200);
+  } catch (error) {
+    log.error('Error in purchaseController:', error);
+    return ctx.json({ error: 'An unexpected error occurred' }, 500);
+  }
+});

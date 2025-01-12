@@ -1,11 +1,11 @@
 import { Hono } from 'hono';
-import { validate } from '../middleware/validate.ts';
 import {
   RegisterUserSchema,
   LoginUserSchema,
   ChangePasswordSchema,
 } from './auth.dto.ts';
 import { registerUser, loginUser, changePassword } from './authService.ts';
+import { validate } from '../middleware/validate.ts';
 
 export const authController = new Hono();
 
@@ -17,8 +17,8 @@ authController.post(
     const result = await registerUser(username, email, password);
 
     // return ctx.json(result, result.error ? 400 : 201);
-    return ctx.json(result, 201)
-  }
+    return ctx.json(result, 201);
+  },
 );
 
 authController.post(
@@ -29,7 +29,7 @@ authController.post(
 
     const result = await loginUser(email, password);
     return ctx.json(result, result.error ? 401 : 200);
-  }
+  },
 );
 
 authController.post(
@@ -45,5 +45,5 @@ authController.post(
 
     const result = await changePassword(userId, oldPassword, newPassword);
     return ctx.json(result, result.error ? 400 : 200);
-  }
+  },
 );

@@ -1,20 +1,15 @@
+import { createHmac } from 'crypto';
 import { query } from '../db/database.ts';
-import { createHmac, randomBytes } from 'crypto';
 
 // Helper function to hash passwords
-const hashPassword = (password: string, salt: string): string => {
-  return createHmac('sha256', salt).update(password).digest('hex');
-};
-
-// Generate a random salt
-const generateSalt = (): string => {
-  return randomBytes(16).toString('hex');
-};
+const hashPassword = (password: string, salt: string): string => createHmac('sha256', salt).update(password).digest('hex');
 
 // Compare plain password with the hashed one
-const verifyPassword = (password: string, salt: string, hashedPassword: string): boolean => {
-  return hashPassword(password, salt) === hashedPassword;
-};
+const verifyPassword = (
+  password: string,
+  salt: string,
+  hashedPassword: string,
+): boolean => hashPassword(password, salt) === hashedPassword;
 
 // Register User
 export const registerUser = async (username: string, email: string, password: string) => {
@@ -23,11 +18,11 @@ export const registerUser = async (username: string, email: string, password: st
   try {
     const result = await query(
       'INSERT INTO users (username, email, password, balance) VALUES ($1, $2, $3, $4) RETURNING id',
-      [username, email, hashedPassword, 1000]
+      [username, email, hashedPassword, 1000],
     );
     return { id: result.rows[0].id };
   } catch (err) {
-    return { error: 'Registration failed' };
+    return { error: 'Registration failed', err };
   }
 };
 

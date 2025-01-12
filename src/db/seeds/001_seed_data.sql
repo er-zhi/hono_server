@@ -7,4 +7,5 @@ INSERT INTO products (name, price) VALUES
    ('Product 1', 25.0),
    ('Product 2', 50.0),
    ('Product 3', 75.0),
-   ('Product 4', 100.0);
+   ('Product 4', 100.0),
+   ('Product 5', 9999.0);

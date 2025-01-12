@@ -1,19 +1,20 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { query } from '../db/database.ts';
+import { log } from '../logger/nanoLogger.ts';
 
 const runSeeds = async () => {
   const seedFile = path.resolve(
     path.dirname(new URL(import.meta.url).pathname),
-    '../db/seeds/001_seed_data.sql'
+    '../db/seeds/001_seed_data.sql',
   );
   const sql = await fs.readFile(seedFile, 'utf8');
-  console.log('Seeding initial data...');
+  log.info('Seeding initial data...');
   await query(sql);
-  console.log('Seeding completed.');
+  log.info('Seeding completed.');
 };
 
 runSeeds().catch((err) => {
-  console.error('Error running seeds:', err);
+  log.error('Error running seeds:', err);
   process.exit(1);
 });

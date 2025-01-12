@@ -25,8 +25,10 @@
 8. `npm start`.
 
 ## Result: 
-### Task 1:
-Minimal CRUD for authorisation, data validation via zod, e2e test with built in test and assert modules.
+### Task 1: Minimal CRUD for Authorization
+* Data Validation: Utilized zod for input validation.
+* E2E Testing: Implemented using Node.js's built-in test and assert modules.
+
 POST /register
   ```json
   {
@@ -50,14 +52,27 @@ POST /change-password
   }
   ```
 
-### Task 2:
-cache middleware simpleCache based on redis,
-to see cache status added heater 'X-Cache-Status', 'MISS' or 'HIT'
+### Task 2: Caching with Redis
+* mplemented a simpleCache middleware using Redis.
+* Added response header: X-Cache-Status to indicate cache status (HIT or MISS).
 GET http://localhost:3000/products
+Fetches the lowest priced items, with results cached for performance.
 
-## Task 3: Implement Product Purchase
+## Task 3: Product Purchase with Balance Check
+* E2E Testing:
+ * Dynamically creates a user.
+ * Fetches all available products from the database.
+ * Makes purchases and verifies balance updates and boundary conditions.
+* Database:
+ * Ensure the database is seeded with test data for users and products.
+  ```json
+  {
+    "userId": 42,
+    "productId": 42
+  }
+```
 
-## Task:
+## Task: 
 Стек: strict TypeScript, postgres.js
 Фреймворк на выбор: hono/elysia/fastify/express
 Запрещено использовать: Nest, JWT, ORM

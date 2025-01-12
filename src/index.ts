@@ -3,11 +3,11 @@ import { Hono } from 'hono';
 import { logger } from 'hono/logger';
 
 import { authController } from './auth/authController.ts';
+import { log } from './logger/nanoLogger.ts';
+import { initializeCache, closeCache } from './middleware/redisCache.ts';
 import { productController } from './product/productController.ts';
 import { purchaseController } from './purchase/purchaseController.ts';
 import { userController } from './user/userController.ts';
-import { initializeCache, closeCache } from './middleware/redisCache.ts';
-import { log } from "./logger/nanoLogger.ts";
 
 const app = new Hono();
 app.use('*', logger());
@@ -31,7 +31,7 @@ const startServer = async () => {
     log.info('Redis connected successfully.');
   } catch (error) {
     log.warn('Failed to connect to Redis. Server will continue without caching.');
-    log.error(`Redis Error: ${(error as Error).message}`);
+    log.error('Redis Error', error);
   }
 
   log.info(`Server is running on port: ${port}`);
@@ -53,4 +53,4 @@ const startServer = async () => {
   });
 };
 
-void startServer();
+startServer();

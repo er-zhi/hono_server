@@ -1,6 +1,7 @@
 import pkg from 'pg';
-const { Pool } = pkg;
+import { log } from '../logger/nanoLogger.ts';
 
+const { Pool } = pkg;
 
 const pool = new Pool({
   user: process.env.POSTGRES_USER,
@@ -15,7 +16,7 @@ export const query = async (text: string, params?: any[]) => {
   try {
     return pool.query(text, params);
   } catch (error) {
-    console.error('Database query error: ', error);
+    log.error('Database query error: ', error);
     throw error; // Rethrow the error so the caller knows something went wrong
   }
 };
