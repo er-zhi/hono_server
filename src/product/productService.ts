@@ -1,24 +1,31 @@
 import axios from 'axios';
 import { query } from '../db/database.ts';
 
+// Fetch items from the Skinport API
 const fetchItemsFromSkinport = async (tradable: boolean) => {
   try {
-    const response = await axios.get('https://api.skinport.com/v1/items', {
+    const url = new URL('https://api.skinport.com/v1/items');
+    url.searchParams.append('tradable', tradable.toString());
+    url.searchParams.append('app_id', '730');
+    url.searchParams.append('currency', 'EUR'); // Default currency
+
+    const response = await fetch(url, {
       headers: {
         'Accept-Encoding': 'br', // Enable Brotli compression
       },
-      params: {
-        tradable,
-        app_id: 730,
-        currency: 'EUR', // Default currency
-      },
     });
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(`Failed to fetch data from Skinport: ${error.response?.data || error.message}`);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data from Skinport: ${response.statusText}`);
     }
-    throw new Error('An unknown error occurred while fetching Skinport data.');
+
+    return await response.json();
+  } catch (error) {
+    throw new Error(
+      `An unknown error occurred while fetching Skinport data: ${
+        (error as Error).message || 'Unknown error'
+      }`
+    );
   }
 };
 
